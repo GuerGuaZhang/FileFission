@@ -1,0 +1,21 @@
+# PyInstaller 构建输出
+dist/
+build/
+*.spec
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 环境
+venv/
+.env
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
