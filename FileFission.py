@@ -190,40 +190,46 @@ class TextSplitterFrame(tk.Frame):
 
     def _build_setup_page(self):
         f = self.setup_frame
-        tk.Label(f, text="源文件 (.txt)：", anchor="w", bg="#f0f0f0"
+        # 上部内容区（填充剩余空间）
+        content = tk.Frame(f, bg="#f0f0f0")
+        content.pack(fill="both", expand=True)
+
+        tk.Label(content, text="源文件 (.txt)：", anchor="w", bg="#f0f0f0"
                  ).pack(fill="x", padx=12, pady=(20, 2))
-        f1 = tk.Frame(f, bg="#f0f0f0")
+        f1 = tk.Frame(content, bg="#f0f0f0")
         f1.pack(fill="x", padx=12)
         tk.Entry(f1, textvariable=self.source_var, width=50, relief="sunken", borderwidth=2
                  ).pack(side="left", padx=(0, 6))
         tk.Button(f1, text="浏览", command=self._browse_source, width=8).pack(side="left")
 
-        tk.Label(f, text="输出文件夹 A（左键保存）：", anchor="w", bg="#f0f0f0"
+        tk.Label(content, text="输出文件夹 A（左键保存）：", anchor="w", bg="#f0f0f0"
                  ).pack(fill="x", padx=12, pady=(14, 2))
-        f2 = tk.Frame(f, bg="#f0f0f0")
+        f2 = tk.Frame(content, bg="#f0f0f0")
         f2.pack(fill="x", padx=12)
         tk.Entry(f2, textvariable=self.dir_a_var, width=50, relief="sunken", borderwidth=2
                  ).pack(side="left", padx=(0, 6))
         tk.Button(f2, text="浏览", command=lambda: self._browse_dir("a"), width=8).pack(side="left")
 
-        tk.Label(f, text="输出文件夹 B（右键保存）：", anchor="w", bg="#f0f0f0"
+        tk.Label(content, text="输出文件夹 B（右键保存）：", anchor="w", bg="#f0f0f0"
                  ).pack(fill="x", padx=12, pady=(14, 2))
-        f3 = tk.Frame(f, bg="#f0f0f0")
+        f3 = tk.Frame(content, bg="#f0f0f0")
         f3.pack(fill="x", padx=12)
         tk.Entry(f3, textvariable=self.dir_b_var, width=50, relief="sunken", borderwidth=2
                  ).pack(side="left", padx=(0, 6))
         tk.Button(f3, text="浏览", command=lambda: self._browse_dir("b"), width=8).pack(side="left")
 
-        bf = tk.Frame(f, bg="#f0f0f0")
-        bf.pack(pady=(26, 6))
-        self.finish_btn = tk.Button(bf, text="开始处理", command=self._on_finish,
+        # 底部栏（始终固定于下边缘）
+        bottom = tk.Frame(f, bg="#f0f0f0")
+        bottom.pack(fill="x", side="bottom")
+
+        self.finish_btn = tk.Button(bottom, text="开始处理", command=self._on_finish,
                                     width=20, relief="raised", borderwidth=2, state="disabled")
-        self.finish_btn.pack()
+        self.finish_btn.pack(pady=(0, 6))
 
         self.setup_status = tk.StringVar(value="就绪")
-        tk.Label(f, textvariable=self.setup_status, anchor="center", wraplength=500,
+        tk.Label(bottom, textvariable=self.setup_status, anchor="center", wraplength=500,
                  relief="sunken", borderwidth=1, bg="#f0f0f0"
-                 ).pack(fill="x", padx=12, pady=(10, 14))
+                 ).pack(fill="x", padx=12, pady=(0, 14))
         self.source_var.trace("w", self._check_ready)
         self.dir_a_var.trace("w", self._check_ready)
         self.dir_b_var.trace("w", self._check_ready)
@@ -429,45 +435,51 @@ class FileExtractFrame(tk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        tk.Label(self, text="输入文件：", anchor="w", bg="#f0f0f0"
+        # 上部内容区（填充剩余空间）
+        content = tk.Frame(self, bg="#f0f0f0")
+        content.pack(fill="both", expand=True)
+
+        tk.Label(content, text="输入文件：", anchor="w", bg="#f0f0f0"
                  ).pack(fill="x", padx=12, pady=(20, 2))
-        f1 = tk.Frame(self, bg="#f0f0f0")
+        f1 = tk.Frame(content, bg="#f0f0f0")
         f1.pack(fill="x", padx=12)
         tk.Entry(f1, textvariable=self.input_path_var, width=50, relief="sunken", borderwidth=2
                  ).pack(side="left", padx=(0, 6))
         tk.Button(f1, text="浏览", command=self._browse_input, width=8).pack(side="left")
 
-        tk.Label(self, text="输出目录：", anchor="w", bg="#f0f0f0"
+        tk.Label(content, text="输出目录：", anchor="w", bg="#f0f0f0"
                  ).pack(fill="x", padx=12, pady=(14, 2))
-        f2 = tk.Frame(self, bg="#f0f0f0")
+        f2 = tk.Frame(content, bg="#f0f0f0")
         f2.pack(fill="x", padx=12)
         tk.Entry(f2, textvariable=self.output_dir_var, width=50, relief="sunken", borderwidth=2
                  ).pack(side="left", padx=(0, 6))
         tk.Button(f2, text="浏览", command=self._browse_output, width=8).pack(side="left")
 
-        cf = tk.Frame(self, bg="#f0f0f0")
+        cf = tk.Frame(content, bg="#f0f0f0")
         cf.pack(fill="x", padx=12, pady=(16, 0))
         tk.Checkbutton(cf, text="保留路径", variable=self.keep_path_var,
                        onvalue=True, offvalue=False, bg="#f0f0f0").pack(side="left", padx=(0, 20))
         tk.Checkbutton(cf, text="保留后缀", variable=self.keep_ext_var,
                        onvalue=True, offvalue=False, bg="#f0f0f0").pack(side="left")
 
-        tk.Label(self, text="每组字符数（0 = 不分组）：", anchor="w", bg="#f0f0f0"
+        tk.Label(content, text="每组字符数（0 = 不分组）：", anchor="w", bg="#f0f0f0"
                  ).pack(fill="x", padx=12, pady=(14, 2))
-        sf = tk.Frame(self, bg="#f0f0f0")
+        sf = tk.Frame(content, bg="#f0f0f0")
         sf.pack(fill="x", padx=12)
         tk.Spinbox(sf, from_=0, to=99999, textvariable=self.char_limit_var,
                    width=12, relief="sunken", borderwidth=2).pack(side="left")
 
-        bf = tk.Frame(self, bg="#f0f0f0")
-        bf.pack(pady=(22, 6))
-        self.process_btn = tk.Button(bf, text="开始处理", command=self._start_processing,
+        # 底部栏（始终固定于下边缘）
+        bottom = tk.Frame(self, bg="#f0f0f0")
+        bottom.pack(fill="x", side="bottom")
+
+        self.process_btn = tk.Button(bottom, text="开始处理", command=self._start_processing,
                                      width=20, relief="raised", borderwidth=2)
-        self.process_btn.pack()
+        self.process_btn.pack(pady=(0, 6))
         self.status_var.set("就绪")
-        self.status_label = tk.Label(self, textvariable=self.status_var, anchor="center",
+        self.status_label = tk.Label(bottom, textvariable=self.status_var, anchor="center",
                                      wraplength=500, relief="sunken", borderwidth=1, bg="#f0f0f0")
-        self.status_label.pack(fill="x", padx=12, pady=(10, 14))
+        self.status_label.pack(fill="x", padx=12, pady=(0, 14))
 
     def _browse_input(self):
         p = filedialog.askopenfilename(title="选择输入文件", filetypes=[("文本文件", "*.txt"), ("所有文件", "*.*")])
@@ -651,31 +663,6 @@ class Application:
             bg="#f0f0f0",
         )
         ver.pack()
-
-        # 底部三行说明文字（紧贴底部）
-        tk.Label(
-            self.splash_frame,
-            text="文件名提取 · 文本分割器 · 批量处理",
-            font=("Consolas", 9),
-            fg="#aaaaaa",
-            bg="#f0f0f0",
-        ).pack(side="bottom", pady=(0, 1))
-
-        tk.Label(
-            self.splash_frame,
-            text="选择标签页 · 配置路径 · 一键完成",
-            font=("Consolas", 8),
-            fg="#bbbbbb",
-            bg="#f0f0f0",
-        ).pack(side="bottom", pady=(0, 1))
-
-        tk.Label(
-            self.splash_frame,
-            text="纯 Python 标准库 · 经典实用工具",
-            font=("Consolas", 8),
-            fg="#cccccc",
-            bg="#f0f0f0",
-        ).pack(side="bottom", pady=(0, 6))
 
     def _show_extract(self):
         self.root.title("FileFission - 文件名提取")
